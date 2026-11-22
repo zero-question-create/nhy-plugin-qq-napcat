@@ -1477,7 +1477,7 @@ async def _handle_rich_message_shortcut(
     quote_info: dict,
     summary: str,
     total: int,
-    event_time: float,
+    event_time: float = 0.0,
 ):
     """聊天记录快捷路径：摘要直接进短期上下文，不再让理解层拆解整段记录。
 
@@ -1497,7 +1497,10 @@ async def _handle_rich_message_shortcut(
 
     mem_id = None
     try:
-        mem_id = create_memory(fragment, half_life=2 * 24 * 3600)
+        mem_id = create_memory(
+            fragment, half_life=2 * 24 * 3600,
+            occurred_at=event_time or None,
+        )
     except Exception as e:
         logger.warning(f"[聊天记录] 记忆写入失败: {e}")
 
